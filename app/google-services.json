@@ -1,0 +1,158 @@
+{
+  "project_info": {
+    "project_number": "401086235530",
+    "project_id": "learnsign-in",
+    "storage_bucket": "learnsign-in.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:401086235530:android:a06a442617d924030f7e73",
+        "android_client_info": {
+          "package_name": "com.example.first_give_up"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "401086235530-tp6uak91kp8it2prh899990nfrlg24m9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.first_give_up",
+            "certificate_hash": "1c01197bd89d85c7a334463bedea256dccf4fd07"
+          }
+        },
+        {
+          "client_id": "401086235530-ma64da27ifkbq2ucpc1m5vjt4th2pgdl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAM5DSFks0bH8JdJQtyIuq439LMyJ2EtFI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "401086235530-ma64da27ifkbq2ucpc1m5vjt4th2pgdl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:401086235530:android:104a6be44f7421380f7e73",
+        "android_client_info": {
+          "package_name": "com.example.new_campus_teamup"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "401086235530-dhu971gpaonjvr2q9umt1c0qrt12atd2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.new_campus_teamup",
+            "certificate_hash": "1c01197bd89d85c7a334463bedea256dccf4fd07"
+          }
+        },
+        {
+          "client_id": "401086235530-v66q21bfuphn9120r3nc6a5igimc8o0l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.new_campus_teamup",
+            "certificate_hash": "5906e64c8e448779d07747790ba106fe10a7b0b3"
+          }
+        },
+        {
+          "client_id": "401086235530-ma64da27ifkbq2ucpc1m5vjt4th2pgdl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAM5DSFks0bH8JdJQtyIuq439LMyJ2EtFI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "401086235530-ma64da27ifkbq2ucpc1m5vjt4th2pgdl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:401086235530:android:f59584d11426391f0f7e73",
+        "android_client_info": {
+          "package_name": "com.example.novanotes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "401086235530-ma64da27ifkbq2ucpc1m5vjt4th2pgdl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAM5DSFks0bH8JdJQtyIuq439LMyJ2EtFI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "401086235530-ma64da27ifkbq2ucpc1m5vjt4th2pgdl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:401086235530:android:5f9d6f0398ec76c70f7e73",
+        "android_client_info": {
+          "package_name": "remainder.chronos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "401086235530-29rnvkjlf1dk5jidv4k449rhs3n6ajtp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "remainder.chronos",
+            "certificate_hash": "7fc43f7f85bd97ae801b80c3421c3bc48a2c47d6"
+          }
+        },
+        {
+          "client_id": "401086235530-ma64da27ifkbq2ucpc1m5vjt4th2pgdl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAM5DSFks0bH8JdJQtyIuq439LMyJ2EtFI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "401086235530-ma64da27ifkbq2ucpc1m5vjt4th2pgdl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
