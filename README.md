@@ -37,47 +37,35 @@ A unique feature where users can:
 
    <tr>
     <td>
-      <img src="https://github.com/AyushPorwal10/Stocks_App_Screenshot/blob/main/home_screen.png" alt="Home Screen" width="200"/>
+      <img src="https://github.com/AyushPorwal10/Stocks_App_Screenshot/blob/main/home_light.png" alt="Home Screen" width="200"/>
       <h2>Home Screen</h2>
     </td>
     <td>
-      <img src="https://github.com/AyushPorwal10/Stocks_App_Screenshot/blob/main/top_20_gainers.png" alt="Top 20 Gainers" width="200"/>
-      <h2>Top 20 Gainers</h2>
+      <img src="https://github.com/AyushPorwal10/Stocks_App_Screenshot/blob/main/addReminder_light.png" alt="Add Reminder" width="200"/>
+      <h2>Add Reminder</h2>
     </td>
     <td>
-      <img src="https://github.com/AyushPorwal10/Stocks_App_Screenshot/blob/main/top_20_losers.png" alt="Top 20 Losers" width="200"/>
-      <h2>Top 20 Losers</h2>
-    </td>
-    <td>
-      <img src="https://github.com/AyushPorwal10/Stocks_App_Screenshot/blob/main/company_overview_.png" alt="Company Overview" width="200"/>
-      <h2>Company Overview</h2>
+      <img src="https://github.com/AyushPorwal10/Stocks_App_Screenshot/blob/main/ai.png" alt="AI Message" width="200"/>
+      <h2>Share AI Message</h2>
     </td>
   </tr>
   
   <tr>
     <td>
-      <img src="https://github.com/AyushPorwal10/Stocks_App_Screenshot/blob/main/company_overview.png" alt="Company Overview" width="200"/>
-      <h2>Company Overview</h2>
+      <img src="https://github.com/AyushPorwal10/Stocks_App_Screenshot/blob/main/login_light.png" alt="Google Sign-in" width="200"/>
+      <h2>Google Sign-in</h2>
     </td>
     <td>
-      <img src="https://github.com/AyushPorwal10/Stocks_App_Screenshot/blob/main/add_item_to_new_or_existing_watchlist.png" alt="Manage Watchlists" width="200"/>
-      <h2>Manage Watchlists</h2>
+      <img src="https://github.com/AyushPorwal10/Stocks_App_Screenshot/blob/main/home_dark.png" alt="Dark Theme" width="200"/>
+      <h2>Dark Theme</h2>
     </td>
     <td>
-      <img src="https://github.com/AyushPorwal10/Stocks_App_Screenshot/blob/main/view_created_watchlist.png" alt="Created Watchlists" width="200"/>
-      <h2>Created Watchlists</h2>
-    </td>
-    <td>
-      <img src="https://github.com/AyushPorwal10/Stocks_App_Screenshot/blob/main/search.png" alt="Search Stocks" width="200"/>
-      <h2>Search Stocks</h2>
+      <img src="https://github.com/AyushPorwal10/Stocks_App_Screenshot/blob/main/addReminder_dark.png" alt="Dark Theme" width="200"/>
+      <h2>Dark Theme</h2>
     </td>
   </tr>
 
-  <tr>
-    <td>
-      <img src="https://github.com/AyushPorwal10/Stocks_App_Screenshot/blob/main/watchlist_items.png" alt="Watchlist Items" width="200"/>
-      <h2>Watchlist Items</h2>
-    </td>
+  
     
   </tr>
   
