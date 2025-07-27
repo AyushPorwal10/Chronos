@@ -38,7 +38,8 @@ fun DateTimePickers(
                     .clickable { onDateClick() },
                 placeholder = { Text("Pick a date", color = MaterialTheme.colorScheme.onPrimaryContainer) },
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    disabledTextColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    disabledBorderColor = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             )
         }
@@ -55,7 +56,8 @@ fun DateTimePickers(
                     .clickable { onTimeClick() },
                 placeholder = { Text("Pick a time", color = MaterialTheme.colorScheme.onPrimaryContainer) },
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    disabledTextColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    disabledBorderColor = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             )
         }

@@ -30,15 +30,17 @@ class DashboardRepositoryImpl @Inject constructor(
     ): String? {
 
         return try {
+
+
+            if (imageUri == null)
+                return null
             val reference =
                 firebaseStorage.reference.child("chronos").child(userId).child(reminderId)
-            if (imageUri == null)
-                null
-            else {
-                reference.putFile(imageUri.toUri()).await()
-                val downloadUri = reference.downloadUrl.await()
-                downloadUri.toString()
-            }
+
+
+            reference.putFile(imageUri.toUri()).await()
+            val downloadUri = reference.downloadUrl.await()
+            downloadUri.toString()
 
         } catch (exception: Exception) {
             null
@@ -57,15 +59,9 @@ class DashboardRepositoryImpl @Inject constructor(
         try {
 
             // Generating a unique reminder id
-            val documentReference =
-                firebaseFireStore.collection("chronos").document(userId).collection("reminders")
-                    .document()
+            val documentReference = firebaseFireStore.collection("chronos").document(userId).collection("reminders").document()
 
-            Log.d("Image", "Before ${reminder.reminderImage}")
-            reminder.reminderImage =
-                uploadReminderImage(reminder.reminderImage, userId, documentReference.id)
-            Log.d("Image", "After ${reminder.reminderImage}")
-
+            reminder.reminderImage = uploadReminderImage(reminder.reminderImage, documentReference.id, userId)
 
             reminder.reminderId = documentReference.id
 
@@ -153,14 +149,22 @@ class DashboardRepositoryImpl @Inject constructor(
             firebaseFireStore.collection("chronos").document(userId).collection("reminders")
                 .document(reminder.reminderId).set(reminder).await()
             onStateChange(ReminderUiState.SuccessMessage("Updated Successfully"))
-        }
-        catch (exception : Exception){
+        } catch (exception: Exception) {
             onStateChange(
                 ReminderUiState.ErrorMessage(
                     exception.localizedMessage ?: "Unknown Error"
                 )
 
             )
+        }
+    }
+
+    override suspend fun deleteReminderImage(userId: String, reminderId: String) {
+        try {
+            firebaseStorage.reference.child("chronos").child(userId).child(reminderId).delete().await()
+        }
+        catch (exception : Exception){
+
         }
     }
 

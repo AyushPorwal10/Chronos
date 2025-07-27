@@ -39,7 +39,7 @@ fun ImagePicker(imageUri: Uri?, onClick: () -> Unit) {
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .border(1.dp , MaterialTheme.colorScheme.onBackground, shape = CircleShape)
+                    .border(1.dp , MaterialTheme.colorScheme.onPrimaryContainer, shape = CircleShape)
                     .clip(CircleShape)
                     .size(60.dp)
                     .padding(6.dp)

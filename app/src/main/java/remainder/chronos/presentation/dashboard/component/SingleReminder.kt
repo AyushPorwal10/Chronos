@@ -77,7 +77,8 @@ fun SingleReminder(
                     Image(
                         painter = painterResource(R.drawable.default_reminder),
                         contentDescription = "Default reminder icon",
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(24.dp),
+                        contentScale = ContentScale.Crop
                     )
                 }
                 else {

@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import remainder.chronos.core.util.NotificationUtils.HandleNotificationPermission
 import remainder.chronos.presentation.auth.screen.LoginSignUpScreen
 import remainder.chronos.presentation.auth.viewmodel.AuthViewmodel
 import remainder.chronos.presentation.navigation.authGraph
@@ -31,6 +32,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ChronosTheme(dynamicColor =  false) {
+
+                HandleNotificationPermission()
+                
                 val navigationController = rememberNavController()
                 NavHost(navController = navigationController , startDestination = "auth") {
                     authGraph(navigationController)

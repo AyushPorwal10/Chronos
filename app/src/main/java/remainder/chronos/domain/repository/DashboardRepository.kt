@@ -22,6 +22,7 @@ interface DashboardRepository {
 
     suspend fun updateReminder(userId: String , reminder: Reminder,   onStateChange: (ReminderUiState) -> Unit)
 
+    suspend fun deleteReminderImage(userId : String , reminderId : String )
 
     suspend fun logout()
 }

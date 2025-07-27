@@ -1,7 +1,6 @@
 package remainder.chronos.presentation.dashboard.screen
 
 import android.widget.Toast
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -24,7 +23,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,13 +30,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import remainder.chronos.R
 import remainder.chronos.core.composable.Scaffold
+import remainder.chronos.core.util.NotificationUtils.HandleNotificationPermission
+import remainder.chronos.core.util.UiMessage
 import remainder.chronos.presentation.dashboard.component.CustomDialog
+import remainder.chronos.presentation.dashboard.component.DeleteReminderDialog
 import remainder.chronos.presentation.dashboard.component.SingleReminder
 import remainder.chronos.presentation.dashboard.state.FetchReminderUiState
 import remainder.chronos.presentation.dashboard.state.ReminderUiState
@@ -49,56 +49,43 @@ import remainder.chronos.presentation.navigation.DashboardRoutes
 @Composable
 fun DashboardScreen(
     navController: NavController,
-
     ) {
+
+
 
     val parentEntry = remember(navController.currentBackStackEntry) {
         navController.getBackStackEntry("home")
     }
     val dashboardViewModel: DashboardViewModel = hiltViewModel(parentEntry)
-    val context = LocalContext.current
 
     val fetchReminderUiState by dashboardViewModel.fetchReminderUiState.collectAsState()
     val deleteReminderUiState by dashboardViewModel.deleteReminderUiState.collectAsState()
 
     var showDeleteReminderDialog by remember { mutableStateOf(false) }
 
+
+
+
     if (showDeleteReminderDialog) {
-        CustomDialog(title = stringResource(R.string.delete_reminder), text = stringResource(R.string.sure_to_delele), deleteReminderUiState is ReminderUiState.Loading, onDismiss = {
-            showDeleteReminderDialog = false
-        }) {
-            dashboardViewModel.selectedReminder.value?.let { reminder ->
-                dashboardViewModel.deleteReminder(reminderId = reminder.reminderId)
-                showDeleteReminderDialog = false
-                dashboardViewModel.resetSelectedReminder()
+        DeleteReminderDialog(
+            visible = showDeleteReminderDialog,
+            isLoading = deleteReminderUiState is ReminderUiState.Loading,
+            onDismiss = { showDeleteReminderDialog = false },
+            onConfirm = {
+                dashboardViewModel.selectedReminder.value?.let { reminder ->
+                    dashboardViewModel.deleteReminder(reminder.reminderId)
+                    showDeleteReminderDialog = false
+                    dashboardViewModel.resetSelectedReminder()
+                }
             }
-        }
+        )
     }
 
 
-    LaunchedEffect(deleteReminderUiState) {
-        when (val state = deleteReminderUiState) {
-            is ReminderUiState.SuccessMessage -> {
-                Toast.makeText(
-                    context,
-                    state.message,
-                    Toast.LENGTH_SHORT
-                ).show()
-                dashboardViewModel.resetDeleteReminderState()
-            }
-
-            is ReminderUiState.ErrorMessage -> {
-                Toast.makeText(
-                    context,
-                    state.message,
-                    Toast.LENGTH_SHORT
-                ).show()
-                dashboardViewModel.resetDeleteReminderState()
-            }
 
 
-            else -> {}
-        }
+    HandleDeleteReminderUiState(deleteReminderUiState) {
+        dashboardViewModel.resetDeleteReminderState()
     }
 
     Scaffold(
@@ -112,7 +99,7 @@ fun DashboardScreen(
 
             dashboardViewModel.logout()
 
-            navController.navigate(AuthRoutes.LoginSignUp.route) {
+            navController.navigate("auth") {
                 popUpTo("home") {
                     inclusive = true
                 }
@@ -147,14 +134,12 @@ fun DashboardScreen(
             }
 
             is FetchReminderUiState.Success -> {
-
                 LazyColumn(
                     modifier = Modifier
                         .padding(paddingValues)
                         .padding(10.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-
                     item {
                         CreateAndShareAiImageButton{
                           navController.navigate(DashboardRoutes.CreateAiMessage.route)
@@ -163,7 +148,6 @@ fun DashboardScreen(
                     items(state.reminders) {
                         SingleReminder(
                             it, onEdit = {
-
                                 // keeping track of selected reminder so that user can edit it in addReminder section
                                 dashboardViewModel.setSelectedReminder(it)
                                 navController.navigate(DashboardRoutes.AddReminder.route)
@@ -173,11 +157,7 @@ fun DashboardScreen(
                                 showDeleteReminderDialog = true
                             })
                     }
-
-
                 }
-
-
             }
 
             else -> {}
@@ -194,7 +174,10 @@ fun CreateAndShareAiImageButton(onClick : () -> Unit ) {
     Row(
         modifier = Modifier
             .fillMaxWidth(0.9f)
-            .background(color = MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(12.dp))
+            .background(
+                color = MaterialTheme.colorScheme.primary,
+                shape = RoundedCornerShape(12.dp)
+            )
             .clickable { onClick() },
         horizontalArrangement = Arrangement.SpaceEvenly, verticalAlignment = Alignment.CenterVertically,
 
@@ -215,3 +198,23 @@ fun CreateAndShareAiImageButton(onClick : () -> Unit ) {
     }
 }
 
+
+@Composable
+fun HandleDeleteReminderUiState(deleteReminderUiState: ReminderUiState, onStateHandled: () -> Unit) {
+    val context = LocalContext.current
+
+    LaunchedEffect(deleteReminderUiState) {
+        when (val state = deleteReminderUiState) {
+            is ReminderUiState.SuccessMessage -> {
+                UiMessage.showToast(context , state.message)
+                onStateHandled()
+            }
+
+            is ReminderUiState.ErrorMessage -> {
+                UiMessage.showToast(context , state.message)
+                onStateHandled()
+            }
+            else -> {}
+        }
+    }
+}

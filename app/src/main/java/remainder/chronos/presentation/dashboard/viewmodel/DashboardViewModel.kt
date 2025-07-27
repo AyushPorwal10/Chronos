@@ -7,10 +7,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import remainder.chronos.core.util.NotificationUtils.HandleNotificationPermission
 import remainder.chronos.domain.repository.DashboardRepository
 import remainder.chronos.domain.model.Reminder
 import remainder.chronos.domain.repository.AiMessageRepository
@@ -79,11 +82,12 @@ class DashboardViewModel @Inject constructor(
     fun addReminder(reminder : Reminder) {
         viewModelScope.launch {
             userId?.let {
-                dashboardRepository.saveReminder(it, reminder) { uiState ->
-                    Log.d(TAG, "Reminder saved")
-                    _addUpdateReminderUiState.value = uiState
-                    scheduleRepository.scheduleReminder(reminder)
-                }
+
+                    dashboardRepository.saveReminder(userId = it, reminder) { uiState ->
+                        Log.d(TAG, "Reminder saved")
+                        _addUpdateReminderUiState.value = uiState
+                        scheduleRepository.scheduleReminder(reminder)
+                    }
             }
         }
     }
@@ -102,11 +106,22 @@ class DashboardViewModel @Inject constructor(
         viewModelScope.launch {
             userId?.let {
 
+                val deleteReminder  = launch {
+                    dashboardRepository.deleteReminder(it , reminderId  , onStateChange = {
+                        _deleteReminderUiState.value = it
+                    })
+                }
+
+                val deleteReminderImage = launch {
+                    dashboardRepository.deleteReminderImage(userId = it , reminderId)
+                }
+
+                deleteReminder.join()
+                deleteReminderImage.join()
+
                 // Cancelling scheduled reminder
                 scheduleRepository.cancelReminder(reminderId)
-                dashboardRepository.deleteReminder(it , reminderId  , onStateChange = {
-                    _deleteReminderUiState.value = it
-                })
+
             }
         }
     }
@@ -129,8 +144,9 @@ class DashboardViewModel @Inject constructor(
         viewModelScope.launch {
             dashboardRepository.logout()
         }
-
     }
+
+
 
      fun createAiMessage(prompt : String ){
         viewModelScope.launch {
@@ -145,7 +161,10 @@ class DashboardViewModel @Inject constructor(
             if(response.isSuccessful){
                 val body = response.body()
                 if(body != null){
-                    _aiResponseUiState.value = ReminderUiState.SuccessMessage(body.string())
+                    val bodyString = withContext(Dispatchers.IO){
+                        body.string()
+                    }
+                    _aiResponseUiState.value = ReminderUiState.SuccessMessage(bodyString)
                 }
 
             }

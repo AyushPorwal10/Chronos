@@ -8,8 +8,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,15 +18,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -42,9 +35,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.focusModifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -54,24 +44,24 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
 import remainder.chronos.R
 import remainder.chronos.core.composable.Scaffold
 import remainder.chronos.core.util.DateAndTimeUtil
+import remainder.chronos.core.util.UiMessage
 import remainder.chronos.domain.model.Reminder
 import remainder.chronos.presentation.dashboard.component.DateTimePickers
 import remainder.chronos.presentation.dashboard.component.ImagePicker
+import remainder.chronos.presentation.dashboard.component.OutlinedInputField
+import remainder.chronos.presentation.dashboard.component.ValidateInput
 import remainder.chronos.presentation.dashboard.state.ReminderUiState
 import remainder.chronos.presentation.dashboard.viewmodel.DashboardViewModel
-import remainder.chronos.presentation.navigation.AuthRoutes
-import remainder.chronos.presentation.navigation.DashboardRoutes
 import java.util.Calendar
 
 @Composable
 fun AddReminderScreen(
     navController: NavController,
 
-) {
+    ) {
 
     val parentEntry = remember(navController.currentBackStackEntry) {
         navController.getBackStackEntry("home")
@@ -125,30 +115,16 @@ fun AddReminderScreen(
     }
 
 
-    LaunchedEffect(addUpdateReminderUiState) {
-        when (val state = addUpdateReminderUiState) {
-            is ReminderUiState.ErrorMessage -> {
-                Toast.makeText(
-                    context,
-                    context.getString(R.string.try_again_later),
-                    Toast.LENGTH_SHORT
-                ).show()
-                dashboardViewModel.resetAddUpdateReminderUiState()
-                dashboardViewModel.resetSelectedReminder()
-            }
-
-
-            is ReminderUiState.SuccessMessage -> {
-                Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
-                dashboardViewModel.resetAddUpdateReminderUiState()
-                dashboardViewModel.resetSelectedReminder()
-                navController.popBackStack()
-            }
-
-
-            else -> {}
-        }
+    HandleUpdateReminderUiState(addUpdateReminderUiState , onHandled = {
+        dashboardViewModel.resetAddUpdateReminderUiState()
+        dashboardViewModel.resetSelectedReminder()
+    }){
+        // sending user back to dashboard
+        navController.popBackStack()
     }
+
+
+
 
     Scaffold(
         title = if (editReminder?.reminderId.isNullOrEmpty()) stringResource(R.string.add_remainder) else stringResource(
@@ -220,30 +196,27 @@ fun AddReminderScreen(
                             .padding(top = 10.dp),
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
-                        Button(onClick = { navController.popBackStack() }) {
+                        Button(
+                            onClick = { navController.popBackStack() },
+                            enabled = addUpdateReminderUiState !is ReminderUiState.Loading
+                        ) {
                             Text(stringResource(R.string.cancel))
                         }
                         Button(onClick = {
-                            if (DateAndTimeUtil.isTimeInPast(selectedTime, selectedDate)) {
-                                Toast.makeText(
-                                    context,
-                                    "Please choose a valid time.",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            } else if (reminderTitle.trim().isEmpty())
-                                Toast.makeText(
-                                    context,
-                                    "Please enter reminder title.",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            else {
+
+                            val isReminderInputFine = ValidateInput.validateReminderInput(
+                                reminderTitle ,
+                                selectedDate,
+                                selectedTime,
+                                context
+                            )
+
+                            if(isReminderInputFine){
                                 val reminder = Reminder(
-                                    "",
-                                    reminderTitle,
-                                    selectedDate,
-                                    selectedTime,
-                                    selectedReminderImage.toString(),
-                                    reminderOptionalNote
+                                    // reminderId will be generated in repo class
+                                    "", reminderTitle,
+                                    selectedDate, selectedTime,
+                                    selectedReminderImage.toString(), reminderOptionalNote
                                 )
 
                                 if (editReminder?.reminderId?.isNotEmpty() == true) {
@@ -271,29 +244,31 @@ fun AddReminderScreen(
 
 }
 
-
 @Composable
-fun OutlinedInputField(
-    label: String,
-    value: String,
-    icon : Int ,
-    onValueChange: (String) -> Unit,
-    height: Dp = Dp.Unspecified
-) {
-    Column(modifier = Modifier.fillMaxWidth(0.9f)) {
-        Text(label, modifier = Modifier.padding(start = 6.dp, bottom = 4.dp), color = MaterialTheme.colorScheme.onPrimaryContainer)
-        OutlinedTextField(
-            value = value,
-            onValueChange = onValueChange,
-            leadingIcon = { Image(painter = painterResource(icon), contentDescription = null, modifier = Modifier.size(30.dp)) },
-            placeholder = { Text(label , color = MaterialTheme.colorScheme.onPrimaryContainer ) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .then(if (height != Dp.Unspecified) Modifier.height(height) else Modifier),
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedTextColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                focusedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-            )
-        )
+fun HandleUpdateReminderUiState(addUpdateReminderUiState: ReminderUiState, onHandled: () -> Unit , onReminderUpdate : () -> Unit ) {
+    val context = LocalContext.current
+
+    LaunchedEffect(addUpdateReminderUiState) {
+        when (val state = addUpdateReminderUiState) {
+            is ReminderUiState.ErrorMessage -> {
+
+                UiMessage.showToast(context ,context.getString(R.string.try_again_later) )
+
+                onHandled()
+            }
+            is ReminderUiState.SuccessMessage -> {
+                UiMessage.showToast(context ,state.message )
+
+                Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
+
+                onHandled()
+                onReminderUpdate()
+            }
+
+            else -> {}
+        }
     }
 }
+
+
+
