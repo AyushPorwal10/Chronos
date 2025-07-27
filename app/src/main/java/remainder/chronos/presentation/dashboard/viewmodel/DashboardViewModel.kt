@@ -13,11 +13,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import remainder.chronos.core.util.AIPromptFormatter
 import remainder.chronos.core.util.NotificationUtils.HandleNotificationPermission
 import remainder.chronos.domain.repository.DashboardRepository
 import remainder.chronos.domain.model.Reminder
 import remainder.chronos.domain.repository.AiMessageRepository
 import remainder.chronos.domain.repository.ScheduleRepository
+import remainder.chronos.presentation.dashboard.state.AIResponseUiState
 import remainder.chronos.presentation.dashboard.state.ReminderUiState
 import remainder.chronos.presentation.dashboard.state.FetchReminderUiState
 import java.net.URL
@@ -48,8 +50,8 @@ class DashboardViewModel @Inject constructor(
     val deleteReminderUiState : StateFlow<ReminderUiState> = _deleteReminderUiState.asStateFlow()
 
 
-    private val _aiResponseUiState = MutableStateFlow<ReminderUiState>(ReminderUiState.Idle)
-    val aiResponseUiState : StateFlow<ReminderUiState> = _aiResponseUiState.asStateFlow()
+    private val _aiResponseUiState = MutableStateFlow<AIResponseUiState>(AIResponseUiState.Idle)
+    val aiResponseUiState : StateFlow<AIResponseUiState> = _aiResponseUiState.asStateFlow()
 
 
 
@@ -68,7 +70,7 @@ class DashboardViewModel @Inject constructor(
         _addUpdateReminderUiState.value = ReminderUiState.Idle
     }
     fun resetAiMessageUiState(){
-        _aiResponseUiState.value = ReminderUiState.Idle
+        _aiResponseUiState.value = AIResponseUiState.Idle
     }
 
 
@@ -82,12 +84,19 @@ class DashboardViewModel @Inject constructor(
     fun addReminder(reminder : Reminder) {
         viewModelScope.launch {
             userId?.let {
-
+                val add = launch {
                     dashboardRepository.saveReminder(userId = it, reminder) { uiState ->
                         Log.d(TAG, "Reminder saved")
                         _addUpdateReminderUiState.value = uiState
                         scheduleRepository.scheduleReminder(reminder)
                     }
+                }
+                val createQuote = launch {
+                    createAiMessage(AIPromptFormatter.formatToMotivationalQuote(reminder.reminderTitle))
+                }
+
+                add.join()
+                createQuote.join()
             }
         }
     }
@@ -136,6 +145,8 @@ class DashboardViewModel @Inject constructor(
         }
     }
 
+
+
     fun resetDeleteReminderState(){
         _deleteReminderUiState.value = ReminderUiState.Idle
     }
@@ -148,30 +159,26 @@ class DashboardViewModel @Inject constructor(
 
 
 
-     fun createAiMessage(prompt : String ){
+     fun createAiMessage(prompt : String  ){
         viewModelScope.launch {
 
+            _aiResponseUiState.value = AIResponseUiState.Loading
 
-
-            _aiResponseUiState.value = ReminderUiState.Loading
-            val aiPrompt = "$prompt Give me a concise response with no extra words."
-            val encodedPrompt = URLEncoder.encode(aiPrompt, StandardCharsets.UTF_8.toString())
-
-           // Log.d("AI","Prompt is $encodedPrompt")
-            val response = aiMessageRepository.getAiMotivationalMessage(encodedPrompt)
+           // Log.d("AI","Prompt is $prompt")
+            val response = aiMessageRepository.getAiMotivationalMessage(prompt)
             if(response.isSuccessful){
                 val body = response.body()
                 if(body != null){
                     val bodyString = withContext(Dispatchers.IO){
                         body.string()
                     }
-                    _aiResponseUiState.value = ReminderUiState.SuccessMessage(bodyString)
+                    _aiResponseUiState.value = AIResponseUiState.ResponseMessage(bodyString)
                 }
             }
             else {
                 val stringBody = response.body()?.string()
                 //Log.d("AI","Something went wrong $stringBody") // here for some prompt getting null  but same prompt is working well in Postman
-               _aiResponseUiState.value = ReminderUiState.ErrorMessage(stringBody ?: "Something went wrong\nPlease try Again")
+               _aiResponseUiState.value = AIResponseUiState.ErrorMessage(stringBody ?: "Something went wrong\nPlease try Again")
             }
         }
     }

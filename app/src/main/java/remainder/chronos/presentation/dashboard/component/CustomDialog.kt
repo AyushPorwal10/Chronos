@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 
 
 @Composable
-fun CustomDialog(title : String , text : String , isLoading: Boolean = false, onDismiss: () -> Unit, onConfirm: () -> Unit) {
+fun CustomDialog(title : String , text : String , isLoading: Boolean = false,showCancelButton : Boolean = true,  onDismiss: () -> Unit = {}, onConfirm: () -> Unit) {
     AlertDialog(
         onDismissRequest = { onDismiss() },
         title = { Text(title) },
@@ -30,7 +30,7 @@ fun CustomDialog(title : String , text : String , isLoading: Boolean = false, on
             }
         },
         dismissButton = {
-            if(!isLoading){
+            if(!isLoading && showCancelButton){
                 TextButton(onClick = { onDismiss() }) {
                     Text("Cancel")
                 }

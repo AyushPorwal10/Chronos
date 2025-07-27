@@ -40,6 +40,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import remainder.chronos.R
 import remainder.chronos.core.composable.Scaffold
+import remainder.chronos.core.util.AIPromptFormatter
+import remainder.chronos.presentation.dashboard.state.AIResponseUiState
 import remainder.chronos.presentation.dashboard.state.ReminderUiState
 import remainder.chronos.presentation.dashboard.viewmodel.DashboardViewModel
 
@@ -61,12 +63,12 @@ fun CreateAndShareAiMessage(navController: NavController) {
 
 
     when (val state = aiMessageUiState) {
-        is ReminderUiState.SuccessMessage -> {
+        is AIResponseUiState.ResponseMessage -> {
             OpenShareSheet(state.message, context)
             userPrompt = ""
             dashboardViewModel.resetAiMessageUiState()
         }
-        is ReminderUiState.ErrorMessage ->{
+        is AIResponseUiState.ErrorMessage ->{
             Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
             dashboardViewModel.resetAiMessageUiState()
         }
@@ -111,14 +113,14 @@ fun CreateAndShareAiMessage(navController: NavController) {
                         )
                         .clickable {
                             if (userPrompt.isNotEmpty())
-                                dashboardViewModel.createAiMessage(userPrompt)
+                                dashboardViewModel.createAiMessage(AIPromptFormatter.formatToShareableText(userPrompt))
                             else
                                 Toast.makeText(context, context.getString(R.string.enter_valid_prompt), Toast.LENGTH_SHORT).show()
                         },
                     contentAlignment = Alignment.Center,
                 ) {
 
-                        if(aiMessageUiState is ReminderUiState.Loading){
+                        if(aiMessageUiState is AIResponseUiState.Loading){
                             CircularProgressIndicator(modifier = Modifier.size(32.dp), color = MaterialTheme.colorScheme.onPrimary)
                         }
                         else {

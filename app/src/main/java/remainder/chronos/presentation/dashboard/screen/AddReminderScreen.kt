@@ -50,10 +50,12 @@ import remainder.chronos.core.composable.Scaffold
 import remainder.chronos.core.util.DateAndTimeUtil
 import remainder.chronos.core.util.UiMessage
 import remainder.chronos.domain.model.Reminder
+import remainder.chronos.presentation.dashboard.component.CustomDialog
 import remainder.chronos.presentation.dashboard.component.DateTimePickers
 import remainder.chronos.presentation.dashboard.component.ImagePicker
 import remainder.chronos.presentation.dashboard.component.OutlinedInputField
 import remainder.chronos.presentation.dashboard.component.ValidateInput
+import remainder.chronos.presentation.dashboard.state.AIResponseUiState
 import remainder.chronos.presentation.dashboard.state.ReminderUiState
 import remainder.chronos.presentation.dashboard.viewmodel.DashboardViewModel
 import java.util.Calendar
@@ -70,7 +72,10 @@ fun AddReminderScreen(
     val dashboardViewModel: DashboardViewModel = hiltViewModel(parentEntry)
     val context = LocalContext.current
     val addUpdateReminderUiState by dashboardViewModel.addUpdateReminderUiState.collectAsState()
+    val aiResponseUiState  by dashboardViewModel.aiResponseUiState.collectAsState()
 
+
+    var showMotivationalQuoteDialog by remember { mutableStateOf(false) }
 
     // Case when user trying to edit reminder
     val editReminder = dashboardViewModel.selectedReminder.value
@@ -86,6 +91,33 @@ fun AddReminderScreen(
 
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
         selectedReminderImage = it
+    }
+
+
+    LaunchedEffect(addUpdateReminderUiState, aiResponseUiState) {
+        if (addUpdateReminderUiState is ReminderUiState.SuccessMessage &&
+            (aiResponseUiState is AIResponseUiState.ResponseMessage || aiResponseUiState is AIResponseUiState.ErrorMessage)
+        ) {
+            showMotivationalQuoteDialog = true
+        }
+    }
+
+    if (showMotivationalQuoteDialog) {
+        val message = when (aiResponseUiState) {
+            is AIResponseUiState.ResponseMessage -> (aiResponseUiState as AIResponseUiState.ResponseMessage).message
+            else -> stringResource(R.string.we_believe_you_can)
+        }
+
+        CustomDialog(
+            title = stringResource(R.string.quote),
+            text = message,
+            showCancelButton = false,
+            onConfirm = {
+                showMotivationalQuoteDialog = false
+                dashboardViewModel.resetAiMessageUiState()
+                navController.popBackStack()
+            }
+        )
     }
 
     val showDatePicker = {
@@ -122,7 +154,7 @@ fun AddReminderScreen(
         dashboardViewModel.resetSelectedReminder()
     }){
         // sending user back to dashboard
-        navController.popBackStack()
+        showMotivationalQuoteDialog = true
     }
 
 

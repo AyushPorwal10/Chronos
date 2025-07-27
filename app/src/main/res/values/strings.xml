@@ -24,4 +24,6 @@
     <string name="notification_cannot_be_sent">Chronos will not be able to send\nyou reminder notification.</string>
     <string name="why_we_ask_notification">We ask notification permission to notify you about your reminder.</string>
     <string name="now_you_will_get_notified">Now you will get notified for your reminder.</string>
+    <string name="we_believe_you_can">We believe you can.</string>
+    <string name="quote">Quote</string>
 </resources>

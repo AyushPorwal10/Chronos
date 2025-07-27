@@ -99,7 +99,7 @@ class DashboardRepositoryImpl @Inject constructor(
 
                 val reminders = snapshot?.documents?.mapNotNull { doc ->
                     doc.toObject(Reminder::class.java)?.copy(reminderId = doc.id)
-                } ?: emptyList()
+                }?.sortedBy { it.reminderDate } ?: emptyList()
 
                 trySend(FetchReminderUiState.Success(reminders))
             }
