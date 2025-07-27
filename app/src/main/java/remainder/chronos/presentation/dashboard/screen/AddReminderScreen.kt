@@ -31,6 +31,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -55,7 +56,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import remainder.chronos.R
-import remainder.chronos.core.composable.ReusableScaffold
+import remainder.chronos.core.composable.Scaffold
 import remainder.chronos.core.util.DateAndTimeUtil
 import remainder.chronos.domain.model.Reminder
 import remainder.chronos.presentation.dashboard.component.DateTimePickers
@@ -149,7 +150,7 @@ fun AddReminderScreen(
         }
     }
 
-    ReusableScaffold(
+    Scaffold(
         title = if (editReminder?.reminderId.isNullOrEmpty()) stringResource(R.string.add_remainder) else stringResource(
             R.string.update_reminder
         ),
@@ -209,7 +210,6 @@ fun AddReminderScreen(
                         label = stringResource(R.string.reminder_note),
                         value = reminderOptionalNote,
                         onValueChange = { reminderOptionalNote = it },
-                        singleLine = false,
                         height = 120.dp,
                         icon = R.drawable.note_icon
                     )
@@ -278,20 +278,22 @@ fun OutlinedInputField(
     value: String,
     icon : Int ,
     onValueChange: (String) -> Unit,
-    singleLine: Boolean = true,
     height: Dp = Dp.Unspecified
 ) {
     Column(modifier = Modifier.fillMaxWidth(0.9f)) {
-        Text(label, modifier = Modifier.padding(start = 6.dp, bottom = 4.dp))
+        Text(label, modifier = Modifier.padding(start = 6.dp, bottom = 4.dp), color = MaterialTheme.colorScheme.onPrimaryContainer)
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
             leadingIcon = { Image(painter = painterResource(icon), contentDescription = null, modifier = Modifier.size(30.dp)) },
-            placeholder = { Text(label) },
+            placeholder = { Text(label , color = MaterialTheme.colorScheme.onPrimaryContainer ) },
             modifier = Modifier
                 .fillMaxWidth()
                 .then(if (height != Dp.Unspecified) Modifier.height(height) else Modifier),
-            singleLine = singleLine
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedTextColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                focusedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+            )
         )
     }
 }

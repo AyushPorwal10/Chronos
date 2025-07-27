@@ -27,9 +27,7 @@ class AuthViewmodel @Inject constructor(
 
 
 
-    init {
-        Log.d(TAG,"AuthViewmodel initialized")
-    }
+
     fun signInWithGoogle(idToken: String) {
         viewModelScope.launch {
             _googleSignInUiState.value = GoogleSignInUiState.Loading
@@ -57,8 +55,4 @@ class AuthViewmodel @Inject constructor(
         return authRepository.isUserLoggedIn()
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        Log.d(TAG,"AuthViewmodel cleared")
-    }
 }

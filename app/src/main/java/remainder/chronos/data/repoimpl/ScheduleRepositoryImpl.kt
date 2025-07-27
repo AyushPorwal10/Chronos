@@ -39,4 +39,8 @@ class ScheduleRepositoryImpl @Inject constructor(
 
         WorkManager.getInstance(context).enqueue(request)
     }
+
+    override fun cancelReminder(reminderId: String) {
+        WorkManager.getInstance(context).cancelAllWorkByTag(reminderId)
+    }
 }

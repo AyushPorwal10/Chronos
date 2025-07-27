@@ -31,15 +31,13 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ChronosTheme(dynamicColor =  false) {
-
                 val navigationController = rememberNavController()
-
                 NavHost(navController = navigationController , startDestination = "auth") {
                     authGraph(navigationController)
                     dashboardGraph(navigationController)
                 }
-
             }
         }
     }
 }
+

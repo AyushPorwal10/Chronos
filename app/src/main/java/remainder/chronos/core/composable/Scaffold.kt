@@ -25,7 +25,7 @@ import remainder.chronos.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ReusableScaffold(
+fun Scaffold(
     modifier: Modifier = Modifier,
     title: String? = null,
     showLogout: Boolean = false,

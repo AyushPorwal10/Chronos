@@ -48,29 +48,26 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import remainder.chronos.R
-import remainder.chronos.core.animation.FloatingBubbles
 import remainder.chronos.presentation.auth.state.GoogleSignInUiState
 import remainder.chronos.presentation.auth.viewmodel.AuthViewmodel
 import remainder.chronos.presentation.navigation.DashboardRoutes
+
+
 @Composable
 fun LoginSignUpScreen(
-    authViewmodel: AuthViewmodel = hiltViewModel(),
     navController: NavController
 ) {
+
+
+    val parentEntry = remember(navController.currentBackStackEntry) {
+        navController.getBackStackEntry("auth")
+    }
+    val authViewmodel: AuthViewmodel = hiltViewModel(parentEntry)
+
+
     val uiState by authViewmodel.googleSignInUiState.collectAsState()
     val context = LocalContext.current
 
-
-    LaunchedEffect(Unit) {
-        if(authViewmodel.isLoggedIn()){
-            navController.navigate(DashboardRoutes.Dashboard.route){
-                popUpTo(navController.currentDestination?.id ?: return@navigate){
-                    inclusive = true
-                }
-                launchSingleTop = true
-            }
-        }
-    }
     val signInClient = remember {
         @Suppress("DEPRECATION")
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -134,7 +131,7 @@ fun LoginSignUpScreen(
         when (uiState) {
             is GoogleSignInUiState.Success -> {
                 LaunchedEffect(Unit) {
-                    navController.navigate(DashboardRoutes.Dashboard.route) {
+                    navController.navigate("home") {
                         popUpTo(navController.currentDestination?.id ?: return@navigate) {
                             inclusive = true
                         }

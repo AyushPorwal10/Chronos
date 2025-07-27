@@ -72,7 +72,6 @@ class DashboardViewModel @Inject constructor(
 
 
     init {
-        Log.d(TAG, "ViewModel initialized")
         userId = firebaseAuth.currentUser?.uid
         fetchReminders()
     }
@@ -102,6 +101,9 @@ class DashboardViewModel @Inject constructor(
     fun deleteReminder(reminderId : String ){
         viewModelScope.launch {
             userId?.let {
+
+                // Cancelling scheduled reminder
+                scheduleRepository.cancelReminder(reminderId)
                 dashboardRepository.deleteReminder(it , reminderId  , onStateChange = {
                     _deleteReminderUiState.value = it
                 })
@@ -134,31 +136,22 @@ class DashboardViewModel @Inject constructor(
         viewModelScope.launch {
 
 
-            Log.d("AIResponse","AI Prompt is $prompt")
 
             _aiResponseUiState.value = ReminderUiState.Loading
             val aiPrompt = "$prompt Give me a concise response, no extra words."
-            Log.d("AIResponse","Prompt is $aiPrompt")
             val encodedPrompt = URLEncoder.encode(aiPrompt, StandardCharsets.UTF_8.toString())
 
             val response = aiMessageRepository.getAiMotivationalMessage(encodedPrompt)
             if(response.isSuccessful){
                 val body = response.body()
                 if(body != null){
-                    Log.d("AIResponse","Response is Success")
                     _aiResponseUiState.value = ReminderUiState.SuccessMessage(body.string())
                 }
-                else
-                    Log.d("AIResponse","Response is Body is null")
+
             }
             else {
-                Log.d("AIResponse", "Response Error ${response.body()?.string()}")
                _aiResponseUiState.value = ReminderUiState.ErrorMessage(response.body()?.string() ?: "Something went wrong")
             }
         }
-    }
-    override fun onCleared() {
-        super.onCleared()
-        Log.d(TAG , "ViewModel cleared")
     }
 }

@@ -4,9 +4,9 @@ import androidx.compose.ui.graphics.Color
 
 
 // Dark Theme
-val dark_theme_bg = Color(0xFF0e162a)
+val dark_theme_bg = Color(0xFF000000)
 val dark_theme_on_bg =Color(0xFFFFFFFF)
-val dark_theme_primary = Color(0xFF8748EA)
+val dark_theme_primary = Color(0xFFA273EC)
 val dark_theme_on_primary = Color(0xFFeff3ff)
 val dark_theme_container = Color(0xFFC3CFF5)
 val dark_theme_on_container = Color(0xFF020305)

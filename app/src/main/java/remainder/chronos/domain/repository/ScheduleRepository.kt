@@ -5,4 +5,6 @@ import remainder.chronos.domain.model.Reminder
 interface ScheduleRepository {
 
     fun scheduleReminder(reminder: Reminder)
+
+    fun cancelReminder(reminderId: String)
 }

@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import remainder.chronos.R
-import remainder.chronos.core.composable.ReusableScaffold
+import remainder.chronos.core.composable.Scaffold
 import remainder.chronos.presentation.dashboard.component.CustomDialog
 import remainder.chronos.presentation.dashboard.component.SingleReminder
 import remainder.chronos.presentation.dashboard.state.FetchReminderUiState
@@ -55,9 +55,6 @@ fun DashboardScreen(
     val parentEntry = remember(navController.currentBackStackEntry) {
         navController.getBackStackEntry("home")
     }
-    val scope = rememberCoroutineScope()
-
-
     val dashboardViewModel: DashboardViewModel = hiltViewModel(parentEntry)
     val context = LocalContext.current
 
@@ -104,7 +101,7 @@ fun DashboardScreen(
         }
     }
 
-    ReusableScaffold(
+    Scaffold(
         title = stringResource(R.string.reminders),
         showLogout = true,
         showFloatingActionButton = true,
@@ -116,13 +113,12 @@ fun DashboardScreen(
             dashboardViewModel.logout()
 
             navController.navigate(AuthRoutes.LoginSignUp.route) {
-                popUpTo(navController.currentDestination?.id ?: return@navigate) {
+                popUpTo("home") {
                     inclusive = true
                 }
             }
         }
     ) { paddingValues ->
-
 
         when (val state = fetchReminderUiState) {
             is FetchReminderUiState.Loading -> {
