@@ -154,9 +154,10 @@ class DashboardViewModel @Inject constructor(
 
 
             _aiResponseUiState.value = ReminderUiState.Loading
-            val aiPrompt = "$prompt Give me a concise response, no extra words."
+            val aiPrompt = "$prompt Give me a concise response with no extra words."
             val encodedPrompt = URLEncoder.encode(aiPrompt, StandardCharsets.UTF_8.toString())
 
+           // Log.d("AI","Prompt is $encodedPrompt")
             val response = aiMessageRepository.getAiMotivationalMessage(encodedPrompt)
             if(response.isSuccessful){
                 val body = response.body()
@@ -166,10 +167,11 @@ class DashboardViewModel @Inject constructor(
                     }
                     _aiResponseUiState.value = ReminderUiState.SuccessMessage(bodyString)
                 }
-
             }
             else {
-               _aiResponseUiState.value = ReminderUiState.ErrorMessage(response.body()?.string() ?: "Something went wrong")
+                val stringBody = response.body()?.string()
+                //Log.d("AI","Something went wrong $stringBody") // here for some prompt getting null  but same prompt is working well in Postman
+               _aiResponseUiState.value = ReminderUiState.ErrorMessage(stringBody ?: "Something went wrong\nPlease try Again")
             }
         }
     }

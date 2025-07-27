@@ -73,7 +73,7 @@ fun SingleReminder(
                 contentAlignment = Alignment.Center
             ) {
 
-                if(reminder.reminderImage == null){
+                if(reminder.reminderImage == null || reminder.reminderImage.isNullOrEmpty()){
                     Image(
                         painter = painterResource(R.drawable.default_reminder),
                         contentDescription = "Default reminder icon",

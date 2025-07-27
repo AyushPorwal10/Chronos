@@ -3,6 +3,7 @@ package remainder.chronos.presentation.dashboard.screen
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -115,7 +116,8 @@ fun AddReminderScreen(
     }
 
 
-    HandleUpdateReminderUiState(addUpdateReminderUiState , onHandled = {
+    HandleAddUpdateReminderUiState(addUpdateReminderUiState , onHandled = {
+        Log.d("Testing","Update success")
         dashboardViewModel.resetAddUpdateReminderUiState()
         dashboardViewModel.resetSelectedReminder()
     }){
@@ -245,7 +247,7 @@ fun AddReminderScreen(
 }
 
 @Composable
-fun HandleUpdateReminderUiState(addUpdateReminderUiState: ReminderUiState, onHandled: () -> Unit , onReminderUpdate : () -> Unit ) {
+fun HandleAddUpdateReminderUiState(addUpdateReminderUiState: ReminderUiState, onHandled: () -> Unit , onReminderUpdate : () -> Unit ) {
     val context = LocalContext.current
 
     LaunchedEffect(addUpdateReminderUiState) {
@@ -257,10 +259,7 @@ fun HandleUpdateReminderUiState(addUpdateReminderUiState: ReminderUiState, onHan
                 onHandled()
             }
             is ReminderUiState.SuccessMessage -> {
-                UiMessage.showToast(context ,state.message )
-
-                Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
-
+                UiMessage.showToast(context ,state.message)
                 onHandled()
                 onReminderUpdate()
             }
