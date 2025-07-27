@@ -37,30 +37,30 @@ A unique feature where users can:
 
    <tr>
     <td>
-      <img src="https://github.com/AyushPorwal10/Stocks_App_Screenshot/blob/main/home_light.png" alt="Home Screen" width="200"/>
+      <img src="https://github.com/AyushPorwal10/README_SCREENSHOTS/blob/main/home_light.png" alt="Home Screen" width="200"/>
       <h2>Home Screen</h2>
     </td>
     <td>
-      <img src="https://github.com/AyushPorwal10/Stocks_App_Screenshot/blob/main/addReminder_light.png" alt="Add Reminder" width="200"/>
+      <img src="https://github.com/AyushPorwal10/README_SCREENSHOTS/blob/main/addReminder_light.png" alt="Add Reminder" width="200"/>
       <h2>Add Reminder</h2>
     </td>
     <td>
-      <img src="https://github.com/AyushPorwal10/Stocks_App_Screenshot/blob/main/ai.png" alt="AI Message" width="200"/>
+      <img src="https://github.com/AyushPorwal10/README_SCREENSHOTS/blob/main/ai.png" alt="AI Message" width="200"/>
       <h2>Share AI Message</h2>
     </td>
   </tr>
   
   <tr>
     <td>
-      <img src="https://github.com/AyushPorwal10/Stocks_App_Screenshot/blob/main/login_light.png" alt="Google Sign-in" width="200"/>
+      <img src="https://github.com/AyushPorwal10/README_SCREENSHOTS/blob/main/login_light.png" alt="Google Sign-in" width="200"/>
       <h2>Google Sign-in</h2>
     </td>
     <td>
-      <img src="https://github.com/AyushPorwal10/Stocks_App_Screenshot/blob/main/home_dark.png" alt="Dark Theme" width="200"/>
+      <img src="https://github.com/AyushPorwal10/README_SCREENSHOTS/blob/main/home_dark.png" alt="Dark Theme" width="200"/>
       <h2>Dark Theme</h2>
     </td>
     <td>
-      <img src="https://github.com/AyushPorwal10/Stocks_App_Screenshot/blob/main/addReminder_dark.png" alt="Dark Theme" width="200"/>
+      <img src="https://github.com/AyushPorwal10/README_SCREENSHOTS/blob/main/addReminder_dark.png" alt="Dark Theme" width="200"/>
       <h2>Dark Theme</h2>
     </td>
   </tr>
